@@ -89,9 +89,13 @@ func NewCloud(cfg CloudConfig, metricsRegisterer prometheus.Registerer) (Cloud, 
 		}
 		cfg.Region = region
 	}
+
 	awsCFG := aws.NewConfig().WithRegion(cfg.Region).WithSTSRegionalEndpoint(endpoints.RegionalSTSEndpoint).WithMaxRetries(cfg.MaxRetries).WithEndpointResolver(endpointsResolver)
 	opts = session.Options{}
 	opts.Config.MergeIn(awsCFG)
+	if cfg.LogLevel == "debug" {
+		opts.Config.LogLevel = aws.LogLevel(aws.LogDebug)
+	}
 	if !hasIPv4 {
 		opts.EC2IMDSEndpointMode = endpoints.EC2IMDSEndpointModeStateIPv6
 	}
