@@ -14,9 +14,11 @@ const (
 	flagAWSVpcID         = "aws-vpc-id"
 	flagAWSVpcCacheTTL   = "aws-vpc-cache-ttl"
 	flagAWSMaxRetries    = "aws-max-retries"
+	flagLogLevel         = "log-level"
 	defaultVpcID         = ""
 	defaultRegion        = ""
 	defaultAPIMaxRetries = 10
+	defaultLogLevel      = "info"
 )
 
 type CloudConfig struct {
@@ -37,6 +39,9 @@ type CloudConfig struct {
 
 	// AWS endpoints configuration
 	AWSEndpoints map[string]string
+
+	// Log level for the AWS API client
+	LogLevel string
 }
 
 func (cfg *CloudConfig) BindFlags(fs *pflag.FlagSet) {
@@ -45,4 +50,5 @@ func (cfg *CloudConfig) BindFlags(fs *pflag.FlagSet) {
 	fs.StringVar(&cfg.VpcID, flagAWSVpcID, defaultVpcID, "AWS VpcID for the LoadBalancer resources")
 	fs.IntVar(&cfg.MaxRetries, flagAWSMaxRetries, defaultAPIMaxRetries, "Maximum retries for AWS APIs")
 	fs.StringToStringVar(&cfg.AWSEndpoints, flagAWSAPIEndpoints, nil, "Custom AWS endpoint configuration, format: serviceID1=URL1,serviceID2=URL2")
+	fs.StringVar(&cfg.LogLevel, flagLogLevel, defaultLogLevel, "Set the controller log level - info(default), debug")
 }
